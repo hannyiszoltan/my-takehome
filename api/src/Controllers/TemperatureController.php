@@ -1,0 +1,59 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ADS\TakeHome\Controllers;
+
+use ADS\TakeHome\Framework\HttpRequest;
+use ADS\TakeHome\Framework\HttpResponseInterface;
+use ADS\TakeHome\Framework\JsonHttpResponse;
+use ADS\TakeHome\Services\TemperatureService;
+use InvalidArgumentException;
+
+class TemperatureController
+{
+    public function __construct(
+        private readonly TemperatureService $service
+    ) {
+    }
+
+    public function index(HttpRequest $request): HttpResponseInterface
+    {
+        try {
+            $cityId = filter_var(
+                $request->query["city_id"] ?? null,
+                FILTER_VALIDATE_INT
+            );
+
+            $from = $request->query["from"] ?? null;
+            $to = $request->query["to"] ?? null;
+
+            if (
+                $cityId === false ||
+                !is_string($from) ||
+                !is_string($to)
+            ) {
+                throw new InvalidArgumentException(
+                    "Érvényes 'city_id', 'from' és 'to' paraméterek kötelezőek"
+                );
+            }
+
+            $data = $this->service->getTemperatures(
+                $cityId,
+                $from,
+                $to
+            );
+
+            $response = [
+                "city_id" => $cityId,
+                "from" => $from,
+                "to" => $to,
+                "temperatures" => $data,
+            ];
+
+            return new JsonHttpResponse($response);
+        } catch (InvalidArgumentException $e) {
+            return new JsonHttpResponse(["error" => $e->getMessage()], 400);
+        }
+    }
+}
