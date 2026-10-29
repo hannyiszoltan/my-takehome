@@ -22,19 +22,56 @@ class TemperatureRepository
         int $to,
     ): array {
         $sql = "SELECT 
-                    max_t.date,
-                    max_t.max_temp,
-                    min_t.min_temp
+                    maxT.date,
+                    maxT.max_temp AS maxTemp,
+                    minT.min_temp AS minTemp,
+                    (minT.min_temp + maxT.max_temp) / 2.0 AS avgTemp,
+                    p.precipitation
                 FROM 
-                    maximum_temperatures AS max_t
-                INNER JOIN minimum_temperatures AS min_t
-                    ON max_t.city_id = min_t.city_id
-                    AND max_t.date = min_t.date
+                    maximum_temperatures AS maxT
+                INNER JOIN minimum_temperatures AS minT
+                    ON maxT.city_id = minT.city_id
+                    AND maxT.date = minT.date
+                LEFT JOIN precipitation AS p
+                    ON p.city_id = maxT.city_id
+                    AND p.date = maxT.date
                 WHERE 
-                    max_t.city_id = :city_id 
-                AND max_t.date BETWEEN :from AND :to 
-                ORDER BY max_t.date ASC";
+                    maxT.city_id = :city_id 
+                AND maxT.date BETWEEN :from AND :to 
+                ORDER BY maxT.date ASC";
 
         return $this->db->queryAssoc($sql, [":city_id" => $cityId, ":from" => $from, ":to" => $to]);
+    }
+
+    /**
+     * @return list<array<string, scalar|null>>
+     */
+    public function findByRegionAndDateRange(
+        string $region,
+        int $from,
+        int $to,
+    ): array {
+
+        $sql = "SELECT
+                    maxT.date,
+                    AVG(maxT.max_temp) As maxTemp,
+                    AVG(minT.min_temp) AS minTemp,
+                    AVG((minT.min_temp + maxT.max_temp) / 2.0) AS avgTemp,
+                    AVG(p.precipitation) AS precipitation
+                FROM cities AS c
+                INNER JOIN maximum_temperatures AS maxT
+                    ON maxT.city_id = c.id
+                INNER JOIN minimum_temperatures AS minT
+                    ON minT.city_id = maxT.city_id
+                    AND minT.date = maxT.date
+                LEFT JOIN precipitation AS p
+                    ON p.city_id = maxT.city_id
+                    AND p.date = maxT.date
+                WHERE c.region = :region
+                    AND maxT.date BETWEEN :from AND :to
+                GROUP BY maxT.date
+                ORDER BY maxT.date ASC";
+
+        return $this->db->queryAssoc($sql, [":region" => $region, ":from" => $from, ":to" => $to]);
     }
 }

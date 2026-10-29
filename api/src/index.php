@@ -28,7 +28,8 @@ $temperatureController = new TemperatureController($temperatureService);
 
 $router->addRoute("GET", "/hello", $helloController->sayHello(...));
 $router->addRoute("GET", "/budapest", $helloController->getBudapestMaxTempCount(...));
-$router->addRoute("GET", "/temperatures", $temperatureController->index(...));
+$router->addRoute("GET", "/temperatures", $temperatureController->getByCity(...));
+$router->addRoute("GET", "/temperatures/region", $temperatureController->getByRegion(...));
 // TODO: többi végpont
 
 $router->handleRequest();

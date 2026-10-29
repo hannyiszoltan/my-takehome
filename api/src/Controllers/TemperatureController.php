@@ -17,7 +17,7 @@ class TemperatureController
     ) {
     }
 
-    public function index(HttpRequest $request): HttpResponseInterface
+    public function getByCity(HttpRequest $request): HttpResponseInterface
     {
         try {
             $cityId = filter_var(
@@ -38,14 +38,50 @@ class TemperatureController
                 );
             }
 
-            $data = $this->service->getTemperatures(
+            $data = $this->service->getTemperaturesByCity(
                 $cityId,
                 $from,
                 $to
             );
 
             $response = [
-                "city_id" => $cityId,
+                "cityId" => $cityId,
+                "from" => $from,
+                "to" => $to,
+                "temperatures" => $data,
+            ];
+
+            return new JsonHttpResponse($response);
+        } catch (InvalidArgumentException $e) {
+            return new JsonHttpResponse(["error" => $e->getMessage()], 400);
+        }
+    }
+
+    public function getByRegion(HttpRequest $request): HttpResponseInterface
+    {
+        try {
+            $region = $request->query["region"] ?? null;
+            $from = $request->query["from"] ?? null;
+            $to = $request->query["to"] ?? null;
+
+            if (
+                !is_string($region) ||
+                !is_string($from) ||
+                !is_string($to)
+            ) {
+                throw new InvalidArgumentException(
+                    "Érvényes 'region', 'from' és 'to' paraméterek kötelezőek"
+                );
+            }
+
+            $data = $this->service->getTemperaturesByRegion(
+                $region,
+                $from,
+                $to
+            );
+
+            $response = [
+                "region" => $region,
                 "from" => $from,
                 "to" => $to,
                 "temperatures" => $data,

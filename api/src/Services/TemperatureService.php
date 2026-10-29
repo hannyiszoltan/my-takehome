@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ADS\TakeHome\Services;
 
+use ADS\TakeHome\Enums\RegionEnums;
 use ADS\TakeHome\Repositories\TemperatureRepository;
 use DateTimeImmutable;
 use InvalidArgumentException;
@@ -18,7 +19,7 @@ class TemperatureService
     /**
      * @return list<array<string, scalar|null>>
      */
-    public function getTemperatures(
+    public function getTemperaturesByCity(
         int $cityId,
         string $from,
         string $to,
@@ -29,25 +30,37 @@ class TemperatureService
             );
         }
 
-        $fromDate = $this->parseDate($from);
-        $toDate = $this->parseDate($to);
-
-        if ($fromDate > $toDate) {
-            throw new InvalidArgumentException(
-                "A kezdeti dátumnak kisebbnek kell lennie a végső dátumnál"
-            );
-        }
-
-        $fromInt = (int) $fromDate->format('Ymd');
-        $toInt = (int) $toDate->format('Ymd');
+        $dateRange = $this->parseDateRange($from, $to);
 
         return $this->repository->findByCityAndDateRange(
             $cityId,
-            $fromInt,
-            $toInt
+            $dateRange["from"],
+            $dateRange["to"]
         );
     }
 
+    /**
+     * @return list<array<string, scalar|null>>
+     */
+    public function getTemperaturesByRegion(
+        string $region,
+        string $from,
+        string $to
+    ): array {
+        if (!RegionEnums::tryFrom($region)) {
+            throw new InvalidArgumentException(
+                "Érvénytelen 'region' query paraméter"
+            );
+        }
+
+        $dateRange = $this->parseDateRange($from, $to);
+
+        return $this->repository->findByRegionAndDateRange(
+            $region,
+            $dateRange["from"],
+            $dateRange["to"]
+        );
+    }
 
     private function parseDate(string $value): DateTimeImmutable
     {
@@ -63,5 +76,27 @@ class TemperatureService
         }
 
         return $date;
+    }
+
+    /**
+     * @return array{from: int, to: int}
+     */
+    private function parseDateRange(
+        string $from,
+        string $to
+    ): array {
+        $fromDate = $this->parseDate($from);
+        $toDate = $this->parseDate($to);
+
+        if ($fromDate > $toDate) {
+            throw new InvalidArgumentException(
+                "A kezdeti dátumnak kisebbnek vagy egyenlőnek kell lennie a végső dátumnál"
+            );
+        }
+
+        return [
+            "from" => (int) $fromDate->format('Ymd'),
+            "to" => (int) $toDate->format('Ymd'),
+        ];
     }
 }
