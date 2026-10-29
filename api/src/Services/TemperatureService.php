@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ADS\TakeHome\Services;
 
-use ADS\TakeHome\Enums\RegionEnums;
+use ADS\TakeHome\Enums\Region;
 use ADS\TakeHome\Repositories\TemperatureRepository;
 use DateTimeImmutable;
 use InvalidArgumentException;
@@ -47,7 +47,7 @@ class TemperatureService
         string $from,
         string $to
     ): array {
-        if (!RegionEnums::tryFrom($region)) {
+        if (!Region::tryFrom($region)) {
             throw new InvalidArgumentException(
                 "Érvénytelen 'region' query paraméter"
             );
