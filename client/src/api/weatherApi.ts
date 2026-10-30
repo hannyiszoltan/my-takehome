@@ -10,8 +10,7 @@ export function getWeather(
     to: filters.to,
   });
 
-  const path =
-    filters.mode === "city" ? "/temperatures" : "/temperatures/region";
+  const path = filters.mode === "city" ? "/weather" : "/weather/region";
   if (filters.mode === "city") {
     params.set("city_id", String(filters.cityId));
   } else {

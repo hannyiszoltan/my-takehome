@@ -4,7 +4,7 @@ import type { WeatherFilters } from "../types/weather";
 
 export function useWeather(filters: WeatherFilters | null) {
   return useQuery({
-    queryKey: ["temperatures", filters],
+    queryKey: ["weather", filters],
     queryFn: filters ? ({ signal }) => getWeather(filters, signal) : skipToken,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

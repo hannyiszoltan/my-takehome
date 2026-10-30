@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace ADS\TakeHome\Services;
 
 use ADS\TakeHome\Enums\Region;
-use ADS\TakeHome\Repositories\TemperatureRepository;
+use ADS\TakeHome\Repositories\WeatherRepository;
 use DateTimeImmutable;
 use InvalidArgumentException;
 
 /**
- * @phpstan-import-type TemperatureRow from TemperatureRepository
+ * @phpstan-import-type WeatherRow from WeatherRepository
  */
-class TemperatureService
+class WeatherService
 {
     public function __construct(
-        private readonly TemperatureRepository $repository
+        private readonly WeatherRepository $repository
     ) {
     }
 
     /**
-     * @return list<TemperatureRow>
+     * @return list<WeatherRow>
      */
-    public function getTemperaturesByCity(
+    public function getWeatherByCity(
         int $cityId,
         string $from,
         string $to,
@@ -43,9 +43,9 @@ class TemperatureService
     }
 
     /**
-     * @return list<TemperatureRow>
+     * @return list<WeatherRow>
      */
-    public function getTemperaturesByRegion(
+    public function getWeatherByRegion(
         string $region,
         string $from,
         string $to

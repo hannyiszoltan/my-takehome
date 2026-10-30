@@ -7,13 +7,13 @@ namespace ADS\TakeHome\Controllers;
 use ADS\TakeHome\Framework\HttpRequest;
 use ADS\TakeHome\Framework\HttpResponseInterface;
 use ADS\TakeHome\Framework\JsonHttpResponse;
-use ADS\TakeHome\Services\TemperatureService;
+use ADS\TakeHome\Services\WeatherService;
 use InvalidArgumentException;
 
-class TemperatureController
+class WeatherController
 {
     public function __construct(
-        private readonly TemperatureService $service
+        private readonly WeatherService $service
     ) {
     }
 
@@ -38,7 +38,7 @@ class TemperatureController
                 );
             }
 
-            $data = $this->service->getTemperaturesByCity(
+            $data = $this->service->getWeatherByCity(
                 $cityId,
                 $from,
                 $to
@@ -48,7 +48,7 @@ class TemperatureController
                 "cityId" => $cityId,
                 "from" => $from,
                 "to" => $to,
-                "temperatures" => $data,
+                "weather" => $data,
             ];
 
             return new JsonHttpResponse($response);
@@ -74,7 +74,7 @@ class TemperatureController
                 );
             }
 
-            $data = $this->service->getTemperaturesByRegion(
+            $data = $this->service->getWeatherByRegion(
                 $region,
                 $from,
                 $to
@@ -84,7 +84,7 @@ class TemperatureController
                 "region" => $region,
                 "from" => $from,
                 "to" => $to,
-                "temperatures" => $data,
+                "weather" => $data,
             ];
 
             return new JsonHttpResponse($response);

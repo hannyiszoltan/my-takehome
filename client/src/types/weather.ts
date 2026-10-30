@@ -17,7 +17,7 @@ export interface WeatherRow {
 }
 
 interface WeatherData extends DateRange {
-  temperatures: WeatherRow[];
+  weather: WeatherRow[];
 }
 
 export type WeatherResponse = WeatherData &

@@ -7,7 +7,7 @@ namespace ADS\TakeHome\Repositories;
 use ADS\TakeHome\Framework\MySQL;
 
 /**
- * @phpstan-type TemperatureRow array{
+ * @phpstan-type WeatherRow array{
  *     date: int,
  *     maxTemp: float|null,
  *     minTemp: float|null,
@@ -15,7 +15,7 @@ use ADS\TakeHome\Framework\MySQL;
  *     precipitation: float|null
  * }
  */
-class TemperatureRepository
+class WeatherRepository
 {
     public function __construct(
         private readonly MySQL $db
@@ -23,7 +23,7 @@ class TemperatureRepository
     }
 
     /**
-     * @return list<TemperatureRow>
+     * @return list<WeatherRow>
      */
     public function findByCityAndDateRange(
         int $cityId,
@@ -52,11 +52,11 @@ class TemperatureRepository
 
         $rows = $this->db->queryAssoc($sql, [":city_id" => $cityId, ":from" => $from, ":to" => $to]);
 
-        return array_map($this->mapTemperatureRow(...), $rows);
+        return array_map($this->mapWeatherRow(...), $rows);
     }
 
     /**
-     * @return list<TemperatureRow>
+     * @return list<WeatherRow>
      */
     public function findByRegionAndDateRange(
         string $region,
@@ -89,14 +89,14 @@ class TemperatureRepository
 
         $rows = $this->db->queryAssoc($sql, [":region" => $region, ":from" => $from, ":to" => $to]);
 
-        return array_map($this->mapTemperatureRow(...), $rows);
+        return array_map($this->mapWeatherRow(...), $rows);
     }
 
     /**
      * @param array<string, scalar|null> $row
-     * @return TemperatureRow
+     * @return WeatherRow
      */
-    private function mapTemperatureRow(array $row): array
+    private function mapWeatherRow(array $row): array
     {
         return [
             "date" => (int) $row["date"],

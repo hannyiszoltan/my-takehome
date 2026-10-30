@@ -147,7 +147,7 @@ export function App() {
         {submittedQuery ? (
           <WeatherTable
             key={submissionId}
-            rows={weatherQuery.data?.temperatures ?? []}
+            rows={weatherQuery.data?.weather ?? []}
             isPending={weatherQuery.isPending}
             error={weatherQuery.isError ? weatherQuery.error.message : null}
             caption={tableCaption}
