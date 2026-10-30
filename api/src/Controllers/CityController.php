@@ -22,7 +22,7 @@ class CityController
 
             return new JsonHttpResponse($response);
         } catch (Exception $e) {
-            return new JsonHttpResponse(["error" => $e->getMessage()], 500);
+            return new JsonHttpResponse(["error" => "Az adatok lekérése nem sikerült. Próbáld újra később."], 500);
         }
     }
 
