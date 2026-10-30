@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { FieldError } from "./FieldError";
 
 interface DateRangeSelectProps {
   from: string;
@@ -18,12 +19,15 @@ export function DateRangeSelect({
   const id = useId();
   const errorId = error ? `${id}-error` : undefined;
   const inputClassName =
-    "rounded-md border border-slate-300 bg-white px-3 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-blue-500";
+    "h-11 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-2 text-base font-normal text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 aria-invalid:border-red-400 aria-invalid:focus:ring-red-500";
 
   return (
-    <div>
-      <div className="flex flex-wrap items-center gap-3">
-        <label htmlFor={`${id}-from`} className="flex items-center gap-2">
+    <div className="min-w-0">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <label
+          htmlFor={`${id}-from`}
+          className="flex min-w-0 flex-col gap-2 text-sm font-medium leading-5 text-slate-700"
+        >
           Kezdő dátum
           <input
             id={`${id}-from`}
@@ -39,7 +43,10 @@ export function DateRangeSelect({
             className={inputClassName}
           />
         </label>
-        <label htmlFor={`${id}-to`} className="flex items-center gap-2">
+        <label
+          htmlFor={`${id}-to`}
+          className="flex min-w-0 flex-col gap-2 text-sm font-medium leading-5 text-slate-700"
+        >
           Végdátum
           <input
             id={`${id}-to`}
@@ -56,15 +63,7 @@ export function DateRangeSelect({
           />
         </label>
       </div>
-      {error && (
-        <p
-          id={errorId}
-          role="alert"
-          className="mt-2 text-sm font-normal text-red-700"
-        >
-          {error}
-        </p>
-      )}
+      <FieldError id={`${id}-error`} message={error} />
     </div>
   );
 }

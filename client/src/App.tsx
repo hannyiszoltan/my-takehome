@@ -100,7 +100,7 @@ export function App() {
         <WeatherModeToggle mode={mode} onModeChange={handleModeChange} />
         <form
           onSubmit={handleSubmit}
-          className="flex flex-wrap items-center gap-2 p-5 text-base font-semibold text-slate-900"
+          className="grid grid-cols-1 items-start gap-x-4 gap-y-2 p-5 text-base text-slate-900 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_auto]"
         >
           {mode === "city" ? (
             <CitySelect
@@ -129,7 +129,7 @@ export function App() {
           <button
             type="submit"
             disabled={!canSubmit}
-            className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="h-11 rounded-md bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 lg:mt-7"
           >
             {weatherQuery.isFetching ? "Lekérdezés…" : "Lekérdezés"}
           </button>

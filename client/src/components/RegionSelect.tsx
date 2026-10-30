@@ -1,5 +1,6 @@
 import { useId } from "react";
 import type { Region } from "../types/region";
+import { FieldError } from "./FieldError";
 
 interface RegionSelectProps {
   regions: Region[];
@@ -19,8 +20,11 @@ export function RegionSelect({
   const id = useId();
 
   return (
-    <div>
-      <label htmlFor={id} className="sr-only">
+    <div className="min-w-0">
+      <label
+        htmlFor={id}
+        className="mb-2 block text-sm font-medium leading-5 text-slate-700"
+      >
         Régió
       </label>
       <select
@@ -28,8 +32,9 @@ export function RegionSelect({
         value={region ?? ""}
         onChange={(event) => onRegionChange(event.target.value)}
         disabled={regions.length === 0}
+        aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-error` : undefined}
-        className="rounded-md border border-slate-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-60"
+        className="h-11 w-full rounded-md border border-slate-300 bg-white px-3 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-60 aria-invalid:border-red-400 aria-invalid:focus:ring-red-500"
       >
         {regions.length === 0 ? (
           <option value="">
@@ -47,15 +52,7 @@ export function RegionSelect({
           ))
         )}
       </select>
-      {error && (
-        <p
-          id={`${id}-error`}
-          role="alert"
-          className="mt-2 text-sm font-normal text-red-700"
-        >
-          {error}
-        </p>
-      )}
+      <FieldError id={`${id}-error`} message={error} />
     </div>
   );
 }
