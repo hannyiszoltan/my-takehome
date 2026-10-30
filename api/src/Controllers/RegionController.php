@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ADS\TakeHome\Controllers;
 
 use ADS\TakeHome\Framework\JsonHttpResponse;

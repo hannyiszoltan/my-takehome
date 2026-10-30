@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ADS\TakeHome\Repositories;
 
 use ADS\TakeHome\Framework\MySQL;
