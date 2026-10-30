@@ -32,6 +32,11 @@ export function WeatherTableFooter({
   return (
     <tfoot className="border-t-2 border-slate-200 bg-slate-50 text-slate-900">
       <tr>
+        <td colSpan={5} className="px-5 py-3 text-sm text-slate-600">
+          Statisztikák a teljes lekérdezett időszak adataiból
+        </td>
+      </tr>
+      <tr>
         <th scope="row" className="px-5 py-3 font-semibold">
           Medián
         </th>

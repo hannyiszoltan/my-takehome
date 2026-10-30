@@ -28,6 +28,7 @@ export function App() {
   );
   const [from, setFrom] = useState("1901-01-01");
   const [to, setTo] = useState("1901-01-01");
+  const [submissionId, setSubmissionId] = useState(0);
   const [submittedQuery, setSubmittedQuery] = useState<SubmittedQuery | null>(
     null,
   );
@@ -78,6 +79,8 @@ export function App() {
     if (!canSubmit) {
       return;
     }
+
+    setSubmissionId((id) => id + 1);
 
     if (areWeatherFiltersEqual(submittedQuery?.filters, draftQuery.filters)) {
       void weatherQuery.refetch();
@@ -143,6 +146,7 @@ export function App() {
         />
         {submittedQuery ? (
           <WeatherTable
+            key={submissionId}
             rows={weatherQuery.data?.temperatures ?? []}
             isPending={weatherQuery.isPending}
             error={weatherQuery.isError ? weatherQuery.error.message : null}
