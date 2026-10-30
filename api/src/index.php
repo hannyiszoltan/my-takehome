@@ -36,6 +36,5 @@ $router->addRoute("GET", "/cities", $cityController->getCities(...));
 $router->addRoute("GET", "/regions", $regionController->getRegions(...));
 $router->addRoute("GET", "/temperatures", $temperatureController->getByCity(...));
 $router->addRoute("GET", "/temperatures/region", $temperatureController->getByRegion(...));
-// TODO: többi végpont
 
 $router->handleRequest();
