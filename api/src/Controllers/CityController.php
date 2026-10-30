@@ -22,7 +22,7 @@ class CityController
 
             return new JsonHttpResponse($response);
         } catch (Exception $e) {
-            return new JsonHttpResponse(["error" => $e->getMessage()], 400);
+            return new JsonHttpResponse(["error" => $e->getMessage()], 500);
         }
     }
 
