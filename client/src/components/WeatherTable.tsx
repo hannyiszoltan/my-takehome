@@ -5,6 +5,7 @@ import {
   formatPrecipitation,
   formatTemperature,
 } from "../utils/format";
+import { WeatherTableFooter } from "./WeatherTableFooter";
 
 interface WeatherTableProps {
   rows: WeatherRow[];
@@ -94,6 +95,9 @@ export function WeatherTable({
             ))
           )}
         </tbody>
+        {!isPending && !error && rows.length > 0 && (
+          <WeatherTableFooter rows={rows} unitSystem={unitSystem} />
+        )}
       </table>
     </div>
   );
