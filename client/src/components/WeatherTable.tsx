@@ -1,11 +1,17 @@
 import type { WeatherRow } from "../types/weather";
-import { formatDate, formatMeasurement } from "../utils/format";
+import type { UnitSystem } from "../types/units";
+import {
+  formatDate,
+  formatPrecipitation,
+  formatTemperature,
+} from "../utils/format";
 
 interface WeatherTableProps {
   rows: WeatherRow[];
   isPending: boolean;
   error: string | null;
   caption: string;
+  unitSystem: UnitSystem;
 }
 
 export function WeatherTable({
@@ -13,6 +19,7 @@ export function WeatherTable({
   isPending,
   error,
   caption,
+  unitSystem,
 }: WeatherTableProps) {
   return (
     <div className="overflow-x-auto rounded-b-xl">
@@ -72,16 +79,16 @@ export function WeatherTable({
                   {formatDate(row.date)}
                 </th>
                 <td className="whitespace-nowrap px-5 py-3 text-right tabular-nums">
-                  {formatMeasurement(row.minTemp, "°C")}
+                  {formatTemperature(row.minTemp, unitSystem)}
                 </td>
                 <td className="whitespace-nowrap px-5 py-3 text-right tabular-nums">
-                  {formatMeasurement(row.maxTemp, "°C")}
+                  {formatTemperature(row.maxTemp, unitSystem)}
                 </td>
                 <td className="whitespace-nowrap px-5 py-3 text-right tabular-nums">
-                  {formatMeasurement(row.avgTemp, "°C")}
+                  {formatTemperature(row.avgTemp, unitSystem)}
                 </td>
                 <td className="whitespace-nowrap px-5 py-3 text-right tabular-nums">
-                  {formatMeasurement(row.precipitation, "mm")}
+                  {formatPrecipitation(row.precipitation, unitSystem)}
                 </td>
               </tr>
             ))

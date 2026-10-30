@@ -3,12 +3,14 @@ import type { SubmitEvent } from "react";
 import { CitySelect } from "./components/CitySelect";
 import { DateRangeSelect } from "./components/DateRangeSelect";
 import { RegionSelect } from "./components/RegionSelect";
+import { UnitToggle } from "./components/UnitToggle";
 import { WeatherModeToggle } from "./components/WeatherModeToggle";
 import { WeatherTable } from "./components/WeatherTable";
 import { useCities } from "./hooks/useCities";
 import { useRegions } from "./hooks/useRegions";
 import { useWeather } from "./hooks/useWeather";
 import type { WeatherFilters, WeatherMode } from "./types/weather";
+import type { UnitSystem } from "./types/units";
 import { getDateRangeError } from "./utils/dateRange";
 import { areWeatherFiltersEqual } from "./utils/weatherFilters";
 
@@ -19,6 +21,7 @@ interface SubmittedQuery {
 
 export function App() {
   const [mode, setMode] = useState<WeatherMode>("city");
+  const [unitSystem, setUnitSystem] = useState<UnitSystem>("metric");
   const [selectedCityId, setSelectedCityId] = useState<number | null>(null);
   const [selectedRegionName, setSelectedRegionName] = useState<string | null>(
     null,
@@ -134,12 +137,17 @@ export function App() {
             {weatherQuery.isFetching ? "Lekérdezés…" : "Lekérdezés"}
           </button>
         </form>
+        <UnitToggle
+          unitSystem={unitSystem}
+          onUnitSystemChange={setUnitSystem}
+        />
         {submittedQuery ? (
           <WeatherTable
             rows={weatherQuery.data?.temperatures ?? []}
             isPending={weatherQuery.isPending}
             error={weatherQuery.isError ? weatherQuery.error.message : null}
             caption={tableCaption}
+            unitSystem={unitSystem}
           />
         ) : (
           <p className="border-t border-slate-200 px-5 py-8 text-center text-sm text-slate-600">
