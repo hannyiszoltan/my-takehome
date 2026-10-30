@@ -18,7 +18,14 @@ class CityRepository
      */
     public function getCities(): array
     {
-        $sql = "SELECT id, name, region FROM cities";
+        $sql = "SELECT 
+                    id, 
+                    name, 
+                    region 
+                FROM 
+                    cities
+                ORDER BY 
+                    name";
 
         $rows = $this->db->queryAssoc($sql);
 

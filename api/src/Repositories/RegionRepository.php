@@ -18,7 +18,12 @@ class RegionRepository
      */
     public function getRegions(): array
     {
-        $sql = "SELECT DISTINCT region FROM cities ";
+        $sql = "SELECT 
+                    DISTINCT region 
+                FROM 
+                    cities
+                ORDER BY 
+                    region";
 
         $rows = $this->db->queryAssoc($sql);
 

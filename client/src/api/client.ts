@@ -1,4 +1,4 @@
-const baseUrl = (import.meta.env.VITE_API_URL || "/api/v1").replace(/\/$/, "");
+const baseUrl = import.meta.env.VITE_API_URL;
 
 export async function getJson<T>(
   path: string,

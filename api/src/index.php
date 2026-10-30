@@ -5,7 +5,6 @@ namespace ADS\TakeHome;
 include __DIR__ . "/../vendor/autoload.php";
 
 use ADS\TakeHome\Controllers\CityController;
-use ADS\TakeHome\Controllers\ExampleController;
 use ADS\TakeHome\Controllers\RegionController;
 use ADS\TakeHome\Controllers\TemperatureController;
 use ADS\TakeHome\Framework\MySQL;
@@ -29,13 +28,10 @@ $regionRepository = new RegionRepository(db: $mysql);
 $temperatureService = new TemperatureService($temperatureRepository);
 
 //Controller
-$helloController = new ExampleController(greeting: "Hello", db: $mysql);
 $temperatureController = new TemperatureController($temperatureService);
 $cityController = new CityController($cityRepository);
 $regionController = new RegionController($regionRepository);
 
-$router->addRoute("GET", "/hello", $helloController->sayHello(...));
-$router->addRoute("GET", "/budapest", $helloController->getBudapestMaxTempCount(...));
 $router->addRoute("GET", "/cities", $cityController->getCities(...));
 $router->addRoute("GET", "/regions", $regionController->getRegions(...));
 $router->addRoute("GET", "/temperatures", $temperatureController->getByCity(...));
