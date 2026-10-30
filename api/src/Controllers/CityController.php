@@ -10,9 +10,11 @@ class CityController
 {
     public function __construct(
         private readonly CityRepository $repository
-    ) {}
+    ) {
+    }
 
-    public function getCities (): JsonHttpResponse {
+    public function getCities(): JsonHttpResponse
+    {
         try {
             $response = $this->repository->getCities();
 

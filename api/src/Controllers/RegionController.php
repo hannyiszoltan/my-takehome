@@ -10,9 +10,11 @@ class RegionController
 {
     public function __construct(
         private readonly RegionRepository $repository
-    ) {}
+    ) {
+    }
 
-    public function getRegions (): JsonHttpResponse {
+    public function getRegions(): JsonHttpResponse
+    {
         try {
             $response = $this->repository->getRegions();
 
