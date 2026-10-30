@@ -9,9 +9,9 @@ use ADS\TakeHome\Framework\MySQL;
 /**
  * @phpstan-type TemperatureRow array{
  *     date: int,
- *     maxTemp: float,
- *     minTemp: float,
- *     avgTemp: float,
+ *     maxTemp: float|null,
+ *     minTemp: float|null,
+ *     avgTemp: float|null,
  *     precipitation: float|null
  * }
  */
@@ -32,10 +32,11 @@ class TemperatureRepository
     ): array {
         $sql = "SELECT 
                     maxT.date,
-                    maxT.max_temp AS maxTemp,
-                    minT.min_temp AS minTemp,
-                    (minT.min_temp + maxT.max_temp) / 2.0 AS avgTemp,
-                    p.precipitation
+                    NULLIF(maxT.max_temp, -999) AS maxTemp,
+                    NULLIF(minT.min_temp, -999) AS minTemp,
+                    (NULLIF(minT.min_temp, -999)
+                     + NULLIF(maxT.max_temp, -999)) / 2.0 AS avgTemp,
+                    NULLIF(p.precipitation, -999) AS precipitation
                 FROM 
                     maximum_temperatures AS maxT
                 INNER JOIN minimum_temperatures AS minT
@@ -62,13 +63,16 @@ class TemperatureRepository
         int $from,
         int $to,
     ): array {
-
+        //Benne van a query-ben a -999 javítás ami meglett fogalmazva a db-suggestions-ben(6.)
         $sql = "SELECT
                     maxT.date,
-                    AVG(maxT.max_temp) As maxTemp,
-                    AVG(minT.min_temp) AS minTemp,
-                    AVG((minT.min_temp + maxT.max_temp) / 2.0) AS avgTemp,
-                    AVG(p.precipitation) AS precipitation
+                    AVG(NULLIF(maxT.max_temp, -999)) As maxTemp,
+                    AVG(NULLIF(minT.min_temp, -999)) AS minTemp,
+                    AVG(
+                        (NULLIF(minT.min_temp, -999) 
+                        + NULLIF(maxT.max_temp, -999)) / 2.0
+                    ) AS avgTemp,
+                    AVG(NULLIF(p.precipitation, -999)) AS precipitation
                 FROM cities AS c
                 INNER JOIN maximum_temperatures AS maxT
                     ON maxT.city_id = c.id
@@ -96,9 +100,15 @@ class TemperatureRepository
     {
         return [
             "date" => (int) $row["date"],
-            "maxTemp" => (float) $row["maxTemp"],
-            "minTemp" => (float) $row["minTemp"],
-            "avgTemp" => (float) $row["avgTemp"],
+            "maxTemp" => $row["maxTemp"] === null
+                ? null
+                : (float) $row["maxTemp"],
+            "minTemp" => $row["minTemp"] === null
+                ? null
+                : (float) $row["minTemp"],
+            "avgTemp" => $row["avgTemp"] === null
+                ? null
+                : (float) $row["avgTemp"],
             "precipitation" => $row["precipitation"] === null
                 ? null
                 : (float) $row["precipitation"],
