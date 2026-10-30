@@ -1,8 +1,12 @@
-export interface WeatherFilters {
-  cityId: number;
+interface DateRange {
   from: string;
   to: string;
 }
+
+export type WeatherMode = "city" | "region";
+
+export type WeatherFilters = DateRange &
+  ({ mode: "city"; cityId: number } | { mode: "region"; region: string });
 
 export interface WeatherRow {
   date: number;
@@ -12,6 +16,9 @@ export interface WeatherRow {
   precipitation: number | null;
 }
 
-export interface WeatherResponse extends WeatherFilters {
+interface WeatherData extends DateRange {
   temperatures: WeatherRow[];
 }
+
+export type WeatherResponse = WeatherData &
+  ({ cityId: number } | { region: string });
