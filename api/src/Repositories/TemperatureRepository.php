@@ -6,6 +6,15 @@ namespace ADS\TakeHome\Repositories;
 
 use ADS\TakeHome\Framework\MySQL;
 
+/**
+ * @phpstan-type TemperatureRow array{
+ *     date: int,
+ *     maxTemp: float,
+ *     minTemp: float,
+ *     avgTemp: float,
+ *     precipitation: float|null
+ * }
+ */
 class TemperatureRepository
 {
     public function __construct(
@@ -14,7 +23,7 @@ class TemperatureRepository
     }
 
     /**
-     * @return list<array<string, scalar|null>>
+     * @return list<TemperatureRow>
      */
     public function findByCityAndDateRange(
         int $cityId,
@@ -40,11 +49,13 @@ class TemperatureRepository
                 AND maxT.date BETWEEN :from AND :to 
                 ORDER BY maxT.date ASC";
 
-        return $this->db->queryAssoc($sql, [":city_id" => $cityId, ":from" => $from, ":to" => $to]);
+        $rows = $this->db->queryAssoc($sql, [":city_id" => $cityId, ":from" => $from, ":to" => $to]);
+
+        return array_map($this->mapTemperatureRow(...), $rows);
     }
 
     /**
-     * @return list<array<string, scalar|null>>
+     * @return list<TemperatureRow>
      */
     public function findByRegionAndDateRange(
         string $region,
@@ -72,6 +83,25 @@ class TemperatureRepository
                 GROUP BY maxT.date
                 ORDER BY maxT.date ASC";
 
-        return $this->db->queryAssoc($sql, [":region" => $region, ":from" => $from, ":to" => $to]);
+        $rows = $this->db->queryAssoc($sql, [":region" => $region, ":from" => $from, ":to" => $to]);
+
+        return array_map($this->mapTemperatureRow(...), $rows);
+    }
+
+    /**
+     * @param array<string, scalar|null> $row
+     * @return TemperatureRow
+     */
+    private function mapTemperatureRow(array $row): array
+    {
+        return [
+            "date" => (int) $row["date"],
+            "maxTemp" => (float) $row["maxTemp"],
+            "minTemp" => (float) $row["minTemp"],
+            "avgTemp" => (float) $row["avgTemp"],
+            "precipitation" => $row["precipitation"] === null
+                ? null
+                : (float) $row["precipitation"],
+        ];
     }
 }

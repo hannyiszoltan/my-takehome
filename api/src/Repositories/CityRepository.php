@@ -12,12 +12,18 @@ class CityRepository
     }
 
     /**
-     * @return list<array<string, scalar|null>>
+     * @return list<array{id: int, name: string, region: string}>
      */
     public function getCities(): array
     {
-        $sql = "SELECT * FROM cities";
+        $sql = "SELECT id, name, region FROM cities";
 
-        return $this->db->queryAssoc($sql);
+        $rows = $this->db->queryAssoc($sql);
+
+        return array_map(static fn (array $row): array => [
+            "id" => (int) $row["id"],
+            "name" => (string) $row["name"],
+            "region" => (string) $row["region"],
+        ], $rows);
     }
 }

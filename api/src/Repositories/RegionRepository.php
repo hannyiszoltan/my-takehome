@@ -12,12 +12,16 @@ class RegionRepository
     }
 
     /**
-     * @return list<array<string, scalar|null>>
+     * @return list<array{region: string}>
      */
     public function getRegions(): array
     {
         $sql = "SELECT DISTINCT region FROM cities ";
 
-        return $this->db->queryAssoc($sql);
+        $rows = $this->db->queryAssoc($sql);
+
+        return array_map(static fn (array $row): array => [
+            "region" => (string) $row["region"],
+        ], $rows);
     }
 }

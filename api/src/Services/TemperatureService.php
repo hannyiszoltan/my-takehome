@@ -9,6 +9,9 @@ use ADS\TakeHome\Repositories\TemperatureRepository;
 use DateTimeImmutable;
 use InvalidArgumentException;
 
+/**
+ * @phpstan-import-type TemperatureRow from TemperatureRepository
+ */
 class TemperatureService
 {
     public function __construct(
@@ -17,7 +20,7 @@ class TemperatureService
     }
 
     /**
-     * @return list<array<string, scalar|null>>
+     * @return list<TemperatureRow>
      */
     public function getTemperaturesByCity(
         int $cityId,
@@ -40,7 +43,7 @@ class TemperatureService
     }
 
     /**
-     * @return list<array<string, scalar|null>>
+     * @return list<TemperatureRow>
      */
     public function getTemperaturesByRegion(
         string $region,
