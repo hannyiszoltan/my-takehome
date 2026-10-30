@@ -42,7 +42,7 @@ class WeatherRepository
                 INNER JOIN minimum_temperatures AS minT
                     ON maxT.city_id = minT.city_id
                     AND maxT.date = minT.date
-                LEFT JOIN precipitation AS p
+                INNER JOIN precipitation AS p
                     ON p.city_id = maxT.city_id
                     AND p.date = maxT.date
                 WHERE 
@@ -79,7 +79,7 @@ class WeatherRepository
                 INNER JOIN minimum_temperatures AS minT
                     ON minT.city_id = maxT.city_id
                     AND minT.date = maxT.date
-                LEFT JOIN precipitation AS p
+                INNER JOIN precipitation AS p
                     ON p.city_id = maxT.city_id
                     AND p.date = maxT.date
                 WHERE c.region = :region
