@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ADS\TakeHome\Tests;
 
+use ADS\TakeHome\Exceptions\RegionNotFoundException;
+use ADS\TakeHome\Repositories\CityRepository;
 use ADS\TakeHome\Repositories\WeatherRepository;
 use ADS\TakeHome\Services\WeatherService;
 use InvalidArgumentException;
@@ -26,7 +28,9 @@ class WeatherServiceTest extends TestCase
             ->with(1, 20240229, 20240229)
             ->willReturn($rows);
 
-        $service = new WeatherService($repository);
+        $cityRepository = $this->createMock(CityRepository::class);
+        $cityRepository->expects($this->once())->method('exists')->with(1)->willReturn(true);
+        $service = new WeatherService($repository, $cityRepository);
 
         $this->assertSame($rows, $service->getWeatherByCity(1, '2024-02-29', '2024-02-29'));
     }
@@ -39,7 +43,7 @@ class WeatherServiceTest extends TestCase
             ->with('Dunántúl', 20230101, 20230131)
             ->willReturn([]);
 
-        $service = new WeatherService($repository);
+        $service = new WeatherService($repository, $this->createMock(CityRepository::class));
 
         $this->assertSame([], $service->getWeatherByRegion('Dunántúl', '2023-01-01', '2023-01-31'));
     }
@@ -48,7 +52,9 @@ class WeatherServiceTest extends TestCase
     {
         $repository = $this->createMock(WeatherRepository::class);
         $repository->expects($this->never())->method('findByCityAndDateRange');
-        $service = new WeatherService($repository);
+        $cityRepository = $this->createMock(CityRepository::class);
+        $cityRepository->expects($this->never())->method('exists');
+        $service = new WeatherService($repository, $cityRepository);
 
         $this->expectException(InvalidArgumentException::class);
 
@@ -59,7 +65,7 @@ class WeatherServiceTest extends TestCase
     {
         $repository = $this->createMock(WeatherRepository::class);
         $repository->expects($this->never())->method('findByRegionAndDateRange');
-        $service = new WeatherService($repository);
+        $service = new WeatherService($repository, $this->createMock(CityRepository::class));
 
         $this->expectException(InvalidArgumentException::class);
 
@@ -70,7 +76,9 @@ class WeatherServiceTest extends TestCase
     {
         $repository = $this->createMock(WeatherRepository::class);
         $repository->expects($this->never())->method('findByCityAndDateRange');
-        $service = new WeatherService($repository);
+        $cityRepository = $this->createMock(CityRepository::class);
+        $cityRepository->expects($this->never())->method('exists');
+        $service = new WeatherService($repository, $cityRepository);
 
         $this->expectException(InvalidArgumentException::class);
 
@@ -81,9 +89,9 @@ class WeatherServiceTest extends TestCase
     {
         $repository = $this->createMock(WeatherRepository::class);
         $repository->expects($this->never())->method('findByRegionAndDateRange');
-        $service = new WeatherService($repository);
+        $service = new WeatherService($repository, $this->createMock(CityRepository::class));
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(RegionNotFoundException::class);
 
         $service->getWeatherByRegion('Unknown region', '2023-01-01', '2023-01-02');
     }
