@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ADS\TakeHome\Controllers;
 
+use ADS\TakeHome\Exceptions\CityNotFoundException;
+use ADS\TakeHome\Exceptions\RegionNotFoundException;
 use ADS\TakeHome\Framework\HttpRequest;
 use ADS\TakeHome\Framework\HttpResponseInterface;
 use ADS\TakeHome\Framework\JsonHttpResponse;
@@ -52,6 +54,8 @@ class WeatherController
             ];
 
             return new JsonHttpResponse($response);
+        } catch (CityNotFoundException $e) {
+            return new JsonHttpResponse(["error" => $e->getMessage()], 404);
         } catch (InvalidArgumentException $e) {
             return new JsonHttpResponse(["error" => $e->getMessage()], 400);
         }
@@ -88,6 +92,8 @@ class WeatherController
             ];
 
             return new JsonHttpResponse($response);
+        } catch (RegionNotFoundException $e) {
+            return new JsonHttpResponse(["error" => $e->getMessage()], 404);
         } catch (InvalidArgumentException $e) {
             return new JsonHttpResponse(["error" => $e->getMessage()], 400);
         }

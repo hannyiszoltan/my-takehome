@@ -63,7 +63,7 @@ class WeatherRepository
         int $from,
         int $to,
     ): array {
-        //Benne van a query-ben a -999 javítás ami meglett fogalmazva a db-suggestions-ben(6.)
+        //TODO Benne van a query-ben a -999 javítás ami meglett fogalmazva a db-suggestions-ben(6.)
         $sql = "SELECT
                     maxT.date,
                     AVG(NULLIF(maxT.max_temp, -999)) As maxTemp,

@@ -13,6 +13,20 @@ class CityRepository
     ) {
     }
 
+    public function exists(int $cityId): bool
+    {
+        $sql = "SELECT 
+                id 
+            FROM 
+                cities 
+            WHERE 
+                id = :city_id";
+
+        $rows = $this->db->queryAssoc($sql, [":city_id" => $cityId]);
+
+        return $rows !== [];
+    }
+
     /**
      * @return list<array{id: int, name: string, region: string}>
      */

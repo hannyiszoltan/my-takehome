@@ -25,7 +25,7 @@ $cityRepository = new CityRepository(db: $mysql);
 $regionRepository = new RegionRepository(db: $mysql);
 
 //Service
-$weatherService = new WeatherService($weatherRepository);
+$weatherService = new WeatherService($weatherRepository, $cityRepository);
 
 //Controller
 $weatherController = new WeatherController($weatherService);

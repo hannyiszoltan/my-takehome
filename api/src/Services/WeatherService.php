@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace ADS\TakeHome\Services;
 
 use ADS\TakeHome\Enums\Region;
+use ADS\TakeHome\Exceptions\CityNotFoundException;
+use ADS\TakeHome\Exceptions\RegionNotFoundException;
+use ADS\TakeHome\Repositories\CityRepository;
 use ADS\TakeHome\Repositories\WeatherRepository;
 use DateTimeImmutable;
 use InvalidArgumentException;
@@ -15,7 +18,8 @@ use InvalidArgumentException;
 class WeatherService
 {
     public function __construct(
-        private readonly WeatherRepository $repository
+        private readonly WeatherRepository $repository,
+        private readonly CityRepository $cityRepository
     ) {
     }
 
@@ -35,6 +39,10 @@ class WeatherService
 
         $dateRange = $this->parseDateRange($from, $to);
 
+        if (!$this->cityRepository->exists($cityId)) {
+            throw new CityNotFoundException("A megadott város nem található.");
+        }
+
         return $this->repository->findByCityAndDateRange(
             $cityId,
             $dateRange["from"],
@@ -50,9 +58,10 @@ class WeatherService
         string $from,
         string $to
     ): array {
+        //TODO külön táblával a validátor is lehetne a város mintájára, ami meglett fogalmazva a db-suggestions-ben(2.)
         if (!Region::tryFrom($region)) {
-            throw new InvalidArgumentException(
-                "Érvénytelen 'region' query paraméter"
+            throw new RegionNotFoundException(
+                "A megadott régió nem található."
             );
         }
 
